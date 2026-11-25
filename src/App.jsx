@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react'
 import { Route, Routes, useLocation } from 'react-router'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
+import Navbar from './components/common/Navbar'
+import Footer from './components/common/Footer'
 import NotFound from './pages/NotFound'
 import HomePage from './pages/HomePage'
+import EventDetailsPage from './pages/EventDetailsPage'
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -20,6 +21,7 @@ function App() {
       <div className="flex-1">
         <Routes>
           <Route path='/' element={<HomePage/>}/>
+          <Route path='/events/:slug' element={<EventDetailsPage/>} />
           <Route path='*' element={<NotFound/>}/>
         </Routes>
       </div>
