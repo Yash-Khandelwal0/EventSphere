@@ -1,6 +1,6 @@
 import EventReviewSection from "@/components/events/EventReviewSection";
+import api from "@/lib/axios";
 import { formatEventDate, formatEventTimeRange, formatPrice, getDaysRemaining } from "@/lib/utils";
-import axios from "axios";
 import { Bookmark, Calendar, Check, Clock, MapPin, Share2, ShieldCheck, Sparkles, Users } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
@@ -38,17 +38,13 @@ export default function EventDetailsPage() {
     async function fetchEvent() {
       setIsLoading(true);
       try {
-        let {
-          data: { data },
-        } = await axios.get(
-          `https://eventsphere-server-mfdb.onrender.com/api/events/${slug}`,
+        let data = await api.get(
+          `/api/events/${slug}`,
         );
         setEvent(data);
       
-        let {
-          data: { data: reviews },
-        } = await axios.get(
-          `https://eventsphere-server-mfdb.onrender.com/api/events/${data.id || data._id}/reviews`,
+        let reviews = await api.get(
+          `/api/events/${data.id || data._id}/reviews`,
         );
         setReviews(reviews);
       } catch (error) {}

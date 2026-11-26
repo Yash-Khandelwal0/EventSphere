@@ -2,35 +2,50 @@ import Skeleton from "@/components/common/Skeleton";
 import EventCard from "@/components/events/EventCard";
 import FeaturedCarousel from "@/components/events/FeaturedCarousel";
 import { Button } from "@/components/ui/button";
-import axios from "axios";
-import { ArrowRight, Briefcase, ChevronRight, Compass, Cpu, Flame, GraduationCap, Icon, MapPin, Music, Palette, Sparkles, Tag, Trophy } from "lucide-react";
+import api from "@/lib/axios";
+import {
+  ArrowRight,
+  Briefcase,
+  ChevronRight,
+  Compass,
+  Cpu,
+  Flame,
+  GraduationCap,
+  Icon,
+  MapPin,
+  Music,
+  Palette,
+  Sparkles,
+  Tag,
+  Trophy,
+} from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router";
 
 function getCategoryIconComponent(category) {
   const icon = category?.icon || "";
 
-  if(icon === "palette") {
+  if (icon === "palette") {
     return Palette;
   }
 
-  if(icon === "briefcase") {
+  if (icon === "briefcase") {
     return Briefcase;
   }
 
-  if(icon === "graduation-cap") {
+  if (icon === "graduation-cap") {
     return GraduationCap;
   }
 
-  if(icon === "music") {
+  if (icon === "music") {
     return Music;
   }
 
-  if(icon === "trophy") {
+  if (icon === "trophy") {
     return Trophy;
   }
 
-  if(icon === "cpu") {
+  if (icon === "cpu") {
     return Cpu;
   }
 
@@ -92,36 +107,39 @@ const HUB_CITIES = [
 ];
 
 function HomePage() {
-  const [isLoading , setIsLoading] = useState(false)
-  const [categories , setCategories] = useState([])
-  const [trendingEvents , setTrendingEvents] = useState([])
+  const [isLoading, setIsLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
+  const [trendingEvents, setTrendingEvents] = useState([]);
 
-  const [featuredEvnts , setfeaturedEvents] = useState([]);
+  const [featuredEvnts, setfeaturedEvents] = useState([]);
 
   useEffect(() => {
     async function loadHomePage() {
-      setIsLoading(true)
+      setIsLoading(true);
       try {
-        let {data : {data}} = await axios.get("https://eventsphere-server-mfdb.onrender.com/api/events/featured")
+        let data = await api.get("/api/events/featured");
         setfeaturedEvents(data);
       } catch (error) {}
 
-       try {
-        let {data : { data }} = await axios.get("https://eventsphere-server-mfdb.onrender.com/api/categories")
-        setCategories(data)
+      try {
+        let data = await api.get(
+          "/api/categories",
+        );
+        setCategories(data);
       } catch (error) {}
 
-       try {
-        let {data : { data }} = await axios.get("https://eventsphere-server-mfdb.onrender.com/api/events?limit=8&sort=startDate&order=asc")
-        setTrendingEvents(data)
+      try {
+        let data = await api.get(
+          "/api/events?limit=8&sort=startDate&order=asc",
+        );
+        setTrendingEvents(data);
       } catch (error) {}
 
-      setIsLoading(false)
+      setIsLoading(false);
     }
     loadHomePage();
-   
-  }, [])
-  
+  }, []);
+
   return (
     <div className="space-y-16 pb-20">
       <section className="relative pt-12 pb-6 sm:pt-16 sm:pb-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -184,7 +202,7 @@ function HomePage() {
         {isLoading ? (
           <div className="aspect-21/9 rounded-3xl bg-[#EBE8DF]/50 animate-pulse"></div>
         ) : (
-          <FeaturedCarousel events={featuredEvnts}/>  
+          <FeaturedCarousel events={featuredEvnts} />
         )}
       </section>
 
@@ -217,7 +235,7 @@ function HomePage() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3.5">
             {categories.map((c, i) => {
-              const { _id, name, eventCount} = c;
+              const { _id, name, eventCount } = c;
 
               const Icon = getCategoryIconComponent(c);
               const color = getCategoryColor(i);
